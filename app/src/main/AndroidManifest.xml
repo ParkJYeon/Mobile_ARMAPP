@@ -9,15 +9,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ThemaActivity">
+        <activity android:name=".Activity.PhilosophyActivity">
         </activity>
+        <activity android:name=".Activity.HumanitiesActivity">
+        </activity>
+        <activity android:name=".Activity.HistoryActivity">
+        </activity>
+        <activity android:name=".Activity.MusicActivity">
+        </activity>
+        <activity android:name=".Activity.EconomyActivity">
+        </activity>
+        <activity android:name=".Activity.BookMarkActivity">
+        </activity>
+        <activity android:name=".Activity.SettingActivity">
+        </activity>
+        <activity android:name=".Activity.InformActivity"></activity>
     </application>
 
 </manifest>
