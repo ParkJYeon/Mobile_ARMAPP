@@ -10,6 +10,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.macaron.mobile_project.Method.ChangeModule;
 import com.example.macaron.mobile_project.R;
@@ -25,6 +31,48 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Boolean isSetting = false;
+        Switch onnoff = (Switch)findViewById(R.id.onnoff);
+        onnoff.setChecked(isSetting);
+
+        LinearLayout layout_time = (LinearLayout)findViewById(R.id.timesetting);
+        if(isSetting)
+            layout_time.setVisibility(View.VISIBLE);
+        else
+            layout_time.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Switch onnoff = (Switch)findViewById(R.id.onnoff);
+
+        onnoff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                LinearLayout layout_time = (LinearLayout)findViewById(R.id.timesetting);
+                if(isChecked)
+                    layout_time.setVisibility(View.VISIBLE);
+                else
+                    layout_time.setVisibility(View.INVISIBLE);
+
+            }
+        });
+
+        Button btnSetting = (Button)findViewById(R.id.btnsetting);
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePicker timePicker = (TimePicker)findViewById(R.id.timePicker);
+
+                int hour = timePicker.getHour();
+                int minute = timePicker.getMinute();
+
+                Toast.makeText(SettingActivity.this, hour + "시 " + minute + "분", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
