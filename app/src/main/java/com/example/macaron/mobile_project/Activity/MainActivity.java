@@ -37,7 +37,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     }
 
     public void click_Favorite(View view){
-        ImageView bookmark = (ImageView)findViewById(R.id.menu_bookmark);
+
+        ImageView bookmark = (ImageView)findViewById(R.id.bookmark_home);
+
         if(is_Bookmark){
             bookmark.setImageResource(R.drawable.ic_unfavorite);
             is_Bookmark = false;
