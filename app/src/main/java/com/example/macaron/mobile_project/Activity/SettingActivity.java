@@ -1,6 +1,10 @@
 package com.example.macaron.mobile_project.Activity;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,12 +21,17 @@ import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.macaron.mobile_project.BroadcastActivity;
 import com.example.macaron.mobile_project.Method.ChangeModule;
 import com.example.macaron.mobile_project.R;
+
+import java.util.Calendar;
 
 public class SettingActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    public int hour;
+    public int minute;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +41,7 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //디비에 상태 저장
         Boolean isSetting = false;
         Switch onnoff = (Switch)findViewById(R.id.onnoff);
         onnoff.setChecked(isSetting);
@@ -47,6 +57,7 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
     protected void onResume() {
         super.onResume();
 
+        //디비에 온오프 상태도 저장
         Switch onnoff = (Switch)findViewById(R.id.onnoff);
 
         onnoff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -67,12 +78,35 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
             public void onClick(View v) {
                 TimePicker timePicker = (TimePicker)findViewById(R.id.timePicker);
 
-                int hour = timePicker.getHour();
-                int minute = timePicker.getMinute();
+                hour = timePicker.getHour();
+                minute = timePicker.getMinute();
 
                 Toast.makeText(SettingActivity.this, hour + "시 " + minute + "분", Toast.LENGTH_SHORT).show();
+
+                new PushAlarm(getApplicationContext()).Alarm();
             }
         });
+    }
+
+    public class PushAlarm {
+        private Context context;
+
+        public PushAlarm(Context context) {
+            this.context = context;
+        }
+
+        public void Alarm() {
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(context, BroadcastActivity.class);
+
+            PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+            //푸쉬 알람 시간 설정
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hour, minute, 0);
+
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, sender);
+        }
     }
 
     @Override
