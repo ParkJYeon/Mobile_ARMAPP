@@ -12,8 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.macaron.mobile_project.Adapter.ListViewAdapter;
 import com.example.macaron.mobile_project.Class.Knewledge;
 import com.example.macaron.mobile_project.Method.ChangeModule;
 import com.example.macaron.mobile_project.R;
@@ -23,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class PhilosophyActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -34,28 +39,51 @@ public class PhilosophyActivity extends FragmentActivity implements NavigationVi
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final ListView listView;
+        final ListViewAdapter adapter;
+        final ArrayList<Knewledge> knewledges = new ArrayList<>();
+
+        adapter = new ListViewAdapter();
+
+        listView = (ListView)findViewById(R.id.listView_philosophy);
+        listView.setAdapter(adapter);
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("지식").child("철학");
-        reference.addChildEventListener(new ChildEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Knewledge knew = dataSnapshot.getValue(Knewledge.class);
-                Log.e("knew", knew.getcontent());
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Knewledge knewledge = snapshot.getValue(Knewledge.class);
+                    knewledges.add(knewledge);
+                    adapter.addItem(knewledge.gettitle());
+                }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(PhilosophyActivity.this, KnewledgeActivity.class);
+                intent.putExtra("datatable", "지식");
+                intent.putExtra("thema", "철학");
+                intent.putExtra("title", knewledges.get(position).gettitle());
+                intent.putExtra("content", knewledges.get(position).getcontent());
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void clickMenuPhilo(View view){
