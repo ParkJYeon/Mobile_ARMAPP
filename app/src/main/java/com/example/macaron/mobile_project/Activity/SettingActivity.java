@@ -23,12 +23,14 @@ import android.widget.Toast;
 
 import com.example.macaron.mobile_project.BroadcastActivity;
 import com.example.macaron.mobile_project.Method.ChangeModule;
+import com.example.macaron.mobile_project.Method.DatabaseOpenHelper;
 import com.example.macaron.mobile_project.R;
 
 import java.util.Calendar;
 
 public class SettingActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    final DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(SettingActivity.this);
 
     public int hour;
     public int minute;
@@ -81,7 +83,9 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
                 hour = timePicker.getHour();
                 minute = timePicker.getMinute();
 
-                Toast.makeText(SettingActivity.this, hour + "시 " + minute + "분", Toast.LENGTH_SHORT).show();
+                databaseOpenHelper.update(hour, minute);
+
+                Toast.makeText(SettingActivity.this, databaseOpenHelper.getHour() + "시 " + databaseOpenHelper.getMinute() + "분", Toast.LENGTH_SHORT).show();
 
                 new PushAlarm(getApplicationContext()).Alarm();
             }
@@ -103,7 +107,7 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
 
             //푸쉬 알람 시간 설정
             Calendar calendar = Calendar.getInstance();
-            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hour, minute, 0);
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), databaseOpenHelper.getHour(), databaseOpenHelper.getMinute(), 0);
 
             am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, sender);
         }
