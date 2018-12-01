@@ -1,29 +1,37 @@
 package com.example.macaron.mobile_project.Activity;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.example.macaron.mobile_project.Method.ChangeModule;
+import com.example.macaron.mobile_project.Method.DBModule;
 import com.example.macaron.mobile_project.R;
 
 
 public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     boolean is_Bookmark = false;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.drawer_home_layout);
+
+        prefs = getSharedPreferences("Pref", MODE_PRIVATE);
+        Log.e("Tag", "Pref = " + prefs.getBoolean("isFirst", true));
+        checkFirstRun();
 
         ImageView bookmark = (ImageView)findViewById(R.id.bookmark_home);
         if(is_Bookmark){
@@ -94,9 +102,20 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         if(drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
         }else {
+            DBModule dbModule = new DBModule();
+            dbModule.closeBookmarkDB();
+            dbModule.closeReadDB();
             super.onBackPressed();
         }
     }
 
+    public void checkFirstRun(){
+        boolean isFirst = prefs.getBoolean("isFirst", true);
+        if(isFirst){
+            DBModule dbModule = new DBModule();
+            dbModule.createDB(this);
+            prefs.edit().putBoolean("isFirst", false).apply();
+        }
+    }
 
 }
