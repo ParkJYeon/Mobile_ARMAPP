@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.macaron.mobile_project.Class.ListViewItem;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class ListViewAdapter extends BaseAdapter{
 
     private ArrayList<ListViewItem> listViewItems = new ArrayList<ListViewItem>();
+    public LinearLayout layout;
 
     public ListViewAdapter(){
 
@@ -36,10 +38,16 @@ public class ListViewAdapter extends BaseAdapter{
         }
 
         TextView titleview = (TextView)convertView.findViewById(R.id.title_knew);
+        layout = (LinearLayout) convertView.findViewById(R.id.layout_title);
 
         ListViewItem listViewItem = listViewItems.get(position);
 
         titleview.setText(listViewItem.getTitleSrt());
+        if(listViewItem.isIsreadAlready()){
+            layout.setBackgroundResource(R.drawable.read);
+        }else{
+            layout.setBackgroundResource(R.drawable.unread);
+        }
 
         return convertView;
     }
@@ -54,11 +62,20 @@ public class ListViewAdapter extends BaseAdapter{
         return listViewItems.get(position);
     }
 
-    public void addItem(String title){
+    public void addItem(String title, boolean isreadAlready){
         ListViewItem item = new ListViewItem();
         item.setTitleSrt(title);
+        item.setIsreadAlready(isreadAlready);
 
         listViewItems.add(item);
+    }
+
+    public void changeItem(String title, boolean isreadAlready){
+        for (int i = 0 ; i < listViewItems.size() ; i++){
+            if(listViewItems.get(i).getTitleSrt().equals(title)){
+                listViewItems.get(i).setIsreadAlready(isreadAlready);
+            }
+        }
     }
 
 }

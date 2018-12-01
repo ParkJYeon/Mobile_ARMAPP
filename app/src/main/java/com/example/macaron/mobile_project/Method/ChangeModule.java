@@ -19,5 +19,16 @@ public class ChangeModule {
         return;
     }
 
+    public void chActi(Activity pre, Class next, String dataTable, String thema, String title, String content){
+
+        Intent intent = new Intent(pre, next);
+
+        intent.putExtra("datatable", dataTable);
+        intent.putExtra("thema", thema);
+        intent.putExtra("title", title);
+        intent.putExtra("content", content);
+
+        pre.startActivity(intent);
+    }
 
 }

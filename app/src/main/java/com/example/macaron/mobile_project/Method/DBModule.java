@@ -92,14 +92,14 @@ public class DBModule {
         Log.e("Tag", "executeRawQuery_Read() start");
         try{
 
-            Cursor cursor = dbBookmark.rawQuery("SELECT title FROM ReadDB WHERE thema = '" + thema + "';", null);
+            Cursor cursor = dbRead.rawQuery("SELECT title FROM ReadDB WHERE thema = '" + thema + "';", null);
 
             int count = cursor.getCount();
             String[] title = new String[count];
 
             if(count == 0){
                 cursor.close();
-                Log.e("Tag", "No data in BookmarkDB");
+                Log.e("Tag", "No data in ReadDB");
             }else{
                 for(int i = 0 ; i < count ; i++){
                     cursor.moveToNext();
@@ -110,7 +110,7 @@ public class DBModule {
                 return title;
             }
         }catch (Exception e){
-            Log.e("Tag", "Error Select to Bookmark");
+            Log.e("Tag", "Error Select to Read");
         }
 
         return null;
@@ -120,20 +120,20 @@ public class DBModule {
         Log.e("Tag", "executeRawQuery_Read() start");
         try{
 
-            Cursor cursor = dbBookmark.rawQuery("SELECT title FROM ReadDB WHERE thema = '" + thema + "' AND title = '" + title + "';", null);
+            Cursor cursor = dbRead.rawQuery("SELECT title FROM ReadDB WHERE thema = '" + thema + "' AND title = '" + title + "';", null);
 
             int count = cursor.getCount();
 
             if(count == 0){
                 cursor.close();
-                Log.e("Tag", "No data in BookmarkDB");
+                Log.e("Tag", "No data in ReadDB");
             }else{
                 cursor.close();
                 Log.e("Tag", "executeRawQuery_Read() end");
                 return true;
             }
         }catch (Exception e){
-            Log.e("Tag", "Error Select to Bookmark");
+            Log.e("Tag", "Error Select to Read");
         }
 
         return false;

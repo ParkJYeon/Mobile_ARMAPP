@@ -18,6 +18,7 @@ import android.widget.ListView;
 import com.example.macaron.mobile_project.Adapter.ListViewAdapter;
 import com.example.macaron.mobile_project.Class.Knewledge;
 import com.example.macaron.mobile_project.Method.ChangeModule;
+import com.example.macaron.mobile_project.Method.DBModule;
 import com.example.macaron.mobile_project.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -53,13 +54,18 @@ public class MusicActivity extends FragmentActivity implements NavigationView.On
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("지식").child("음악");
+
+        final DBModule dbModule = new DBModule();
+        dbModule.openReadDB(this);
+
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Knewledge knewledge = snapshot.getValue(Knewledge.class);
                     knewledges.add(knewledge);
-                    adapter.addItem(knewledge.gettitle());
+                    boolean is_read = dbModule.executeRawQuery_Read("음악", knewledge.gettitle());
+                    adapter.addItem(knewledge.gettitle(), is_read);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -73,12 +79,15 @@ public class MusicActivity extends FragmentActivity implements NavigationView.On
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MusicActivity.this, KnewledgeActivity.class);
-                intent.putExtra("datatable", "지식");
-                intent.putExtra("thema", "음악");
-                intent.putExtra("title", knewledges.get(position).gettitle());
-                intent.putExtra("content", knewledges.get(position).getcontent());
-                startActivity(intent);
+                adapter.changeItem(knewledges.get(position).gettitle(), true);
+                adapter.notifyDataSetChanged();
+                if(!dbModule.executeRawQuery_Read("음악", knewledges.get(position).gettitle())) {
+                    dbModule.insert_Read("음악", knewledges.get(position).gettitle());
+                }
+
+                ChangeModule changeModule = new ChangeModule();
+                changeModule.chActi(MusicActivity.this, KnewledgeActivity.class, "지식", "음악", knewledges.get(position).gettitle(), knewledges.get(position).getcontent());
+
             }
         });
 

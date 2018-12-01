@@ -18,6 +18,7 @@ import android.widget.ListView;
 import com.example.macaron.mobile_project.Adapter.ListViewAdapter;
 import com.example.macaron.mobile_project.Class.Knewledge;
 import com.example.macaron.mobile_project.Method.ChangeModule;
+import com.example.macaron.mobile_project.Method.DBModule;
 import com.example.macaron.mobile_project.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +51,9 @@ public class HumanitiesActivity extends FragmentActivity implements NavigationVi
         listView = (ListView)findViewById(R.id.listView_humanities);
         listView.setAdapter(adapter);
 
+        final DBModule dbModule = new DBModule();
+        dbModule.openReadDB(this);
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("지식").child("인문학");
         reference.addValueEventListener(new ValueEventListener() {
@@ -58,7 +62,8 @@ public class HumanitiesActivity extends FragmentActivity implements NavigationVi
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Knewledge knewledge = snapshot.getValue(Knewledge.class);
                     knewledges.add(knewledge);
-                    adapter.addItem(knewledge.gettitle());
+                    boolean is_read = dbModule.executeRawQuery_Read("인문학", knewledge.gettitle());
+                    adapter.addItem(knewledge.gettitle(), is_read);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -72,12 +77,15 @@ public class HumanitiesActivity extends FragmentActivity implements NavigationVi
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(HumanitiesActivity.this, KnewledgeActivity.class);
-                intent.putExtra("datatable", "지식");
-                intent.putExtra("thema", "인문학");
-                intent.putExtra("title", knewledges.get(position).gettitle());
-                intent.putExtra("content", knewledges.get(position).getcontent());
-                startActivity(intent);
+                adapter.changeItem(knewledges.get(position).gettitle(), true);
+                adapter.notifyDataSetChanged();
+                if(!dbModule.executeRawQuery_Read("인문학", knewledges.get(position).gettitle())) {
+                    dbModule.insert_Read("인문학", knewledges.get(position).gettitle());
+                }
+
+                ChangeModule changeModule = new ChangeModule();
+                changeModule.chActi(HumanitiesActivity.this, KnewledgeActivity.class, "지식", "인문학", knewledges.get(position).gettitle(), knewledges.get(position).getcontent());
+
             }
         });
 
