@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
 
     public int hour;
     public int minute;
+    public int onoff;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +45,19 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //디비에 상태 저장
-        Boolean isSetting = false;
+        Boolean isSetting;
+
+        //databaseOpenHelper.insert();
+
+        if (databaseOpenHelper.getOnoff()==1)
+        {
+            isSetting = true;
+        }
+        else
+        {
+            isSetting = false;
+        }
+
         Switch onnoff = (Switch)findViewById(R.id.onnoff);
         onnoff.setChecked(isSetting);
 
@@ -59,18 +72,22 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
     protected void onResume() {
         super.onResume();
 
-        //디비에 온오프 상태도 저장
-        Switch onnoff = (Switch)findViewById(R.id.onnoff);
+        final Switch onnoff = (Switch)findViewById(R.id.onnoff);
 
         onnoff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 LinearLayout layout_time = (LinearLayout)findViewById(R.id.timesetting);
-                if(isChecked)
+                if(isChecked) {
                     layout_time.setVisibility(View.VISIBLE);
-                else
+                    onoff = 1;
+                }
+                else {
                     layout_time.setVisibility(View.INVISIBLE);
+                    onoff = 0;
+                }
 
+                databaseOpenHelper.ofUpdate(onoff);
             }
         });
 
@@ -83,13 +100,13 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
                 hour = timePicker.getHour();
                 minute = timePicker.getMinute();
 
-                databaseOpenHelper.update(hour, minute);
+                databaseOpenHelper.timeUpdate(hour, minute);
 
                 Toast.makeText(SettingActivity.this, databaseOpenHelper.getHour() + "시 " + databaseOpenHelper.getMinute() + "분", Toast.LENGTH_SHORT).show();
-
-                new PushAlarm(getApplicationContext()).Alarm();
             }
         });
+
+        new PushAlarm(SettingActivity.this).Alarm();
     }
 
     public class PushAlarm {
@@ -105,11 +122,14 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
 
             PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-            //푸쉬 알람 시간 설정
             Calendar calendar = Calendar.getInstance();
             calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), databaseOpenHelper.getHour(), databaseOpenHelper.getMinute(), 0);
 
-            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, sender);
+            if (databaseOpenHelper.getOnoff()==1)
+                am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, sender);
+            else
+                am.cancel(sender);
+
         }
     }
 

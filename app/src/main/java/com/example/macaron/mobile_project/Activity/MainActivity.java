@@ -102,9 +102,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         if(drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
         }else {
-            DBModule dbModule = new DBModule();
+            /*DBModule dbModule = new DBModule();
             dbModule.closeBookmarkDB();
-            dbModule.closeReadDB();
+            dbModule.closeReadDB();*/
             super.onBackPressed();
         }
     }
