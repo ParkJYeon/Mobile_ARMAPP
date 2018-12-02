@@ -23,8 +23,9 @@
         <activity android:name=".Activity.EconomyActivity"></activity>
         <activity android:name=".Activity.BookMarkActivity"></activity>
         <activity android:name=".Activity.SettingActivity"></activity>
-        <activity android:name=".Activity.InformActivity" />
-        <activity android:name=".Activity.KnewledgeActivity"/>
+        <activity android:name=".Activity.InformActivity" ></activity>
+        <activity android:name=".Activity.KnewledgeActivity"></activity>
+        <activity android:name=".Activity.KnewledgeBookmarkActivity"></activity>
 
         <receiver
             android:name=".BroadcastActivity"

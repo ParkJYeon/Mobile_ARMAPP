@@ -1,12 +1,16 @@
 package com.example.macaron.mobile_project.Method;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.macaron.mobile_project.Class.Bookmark;
 import com.example.macaron.mobile_project.Class.BookmarkDBHelper;
 import com.example.macaron.mobile_project.Class.ReadDBHelper;
+
+import java.util.ArrayList;
 
 public class DBModule {
 
@@ -66,6 +70,39 @@ public class DBModule {
         return null;
     }
 
+    public ArrayList<Bookmark> executeRawQuery_Bookmarklist(){
+        Log.e("Tag", "executeRawQuery_Bookmark() start");
+        try{
+
+            Cursor cursor = dbBookmark.rawQuery("SELECT class, thema, title FROM BookmarkDB;", null);
+
+            int count = cursor.getCount();
+            String[] title = new String[count];
+
+            if(count == 0){
+                cursor.close();
+                Log.e("Tag", "No data in BookmarkDB");
+            }else{
+                ArrayList<Bookmark> bookmarks = new ArrayList<>();
+                Bookmark bookmark = new Bookmark();
+                for(int i = 0 ; i < count ; i++){
+                    cursor.moveToNext();
+                    bookmark.setClassi(cursor.getString(0));
+                    bookmark.setThema(cursor.getString(1));
+                    bookmark.setTitle(cursor.getString(2));
+                    bookmarks.add(bookmark);
+                }
+                cursor.close();
+                Log.e("Tag", "executeRawQuery_Bookmark() end");
+                return bookmarks;
+            }
+        }catch (Exception e){
+            Log.e("Tag", "Error Select to Bookmark");
+        }
+
+        return null;
+    }
+
     public boolean executeRawQuery_Bookmark(String classi, String thema, String title){
         Log.e("Tag", "executeRawQuery_Bookmark() start");
         try{
@@ -86,6 +123,53 @@ public class DBModule {
         }
 
         return false;
+    }
+
+    public boolean executeRawQuery_Bookmark(int i){
+        Log.e("Tag", "executeRawQuery_Bookmark(i) start");
+
+        try{
+            Cursor cursor = dbBookmark.rawQuery("SELECT * FROM BookmarkDB", null);
+            int count = cursor.getCount();
+
+            if(count == 0 ){
+                cursor.close();
+                Log.e("Tag", "No Data in Bookmark");
+            }else {
+                cursor.close();
+                return true;
+            }
+        }catch (Exception e){
+            Log.e("Tag", "Error in SELECT BookmarkDB");
+        }
+
+        return false;
+    }
+
+    public String[] executeRawQuery_Bookmark(){
+        Log.e("Tag", "executeRawQuery_Bookmark() start");
+
+        try{
+            Cursor cursor = dbBookmark.rawQuery("SELECT title FROM BookmarkDB", null);
+            int count = cursor.getCount();
+
+            if(count == 0 ){
+                cursor.close();
+                Log.e("Tag", "No Data in Bookmark");
+            }else {
+                String[] list = new String[count];
+                for(int i = 0 ; i < count ; i++){
+                    cursor.moveToNext();
+                    list[i] = cursor.getString(0);
+                }
+
+                return list;
+            }
+        }catch (Exception e){
+            Log.e("Tag", "Error in SELECT BookmarkDB");
+        }
+
+        return null;
     }
 
     public String[] executeRawQuery_Read(String thema){
@@ -143,7 +227,7 @@ public class DBModule {
         Log.e("Tag", "insert_Bookmark() start");
 
         try{
-            dbBookmark.execSQL("INSERT INTO ReadDB (thema, title) VALUES('" + thema + "','" + title +"');" );
+            dbBookmark.execSQL("INSERT INTO BookmarkDB (class, thema, title) VALUES('" + classi + "','" + thema + "','" + title +"');" );
             Log.e("Tag", "Success insert to Bookmark");
         }catch (Exception e){
             Log.e("Tag", "Error in insert to Bookmark");
