@@ -103,15 +103,16 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
                 databaseOpenHelper.timeUpdate(hour, minute);
 
                 Toast.makeText(SettingActivity.this, databaseOpenHelper.getHour() + "시 " + databaseOpenHelper.getMinute() + "분", Toast.LENGTH_SHORT).show();
+
+                new PushAlarm(SettingActivity.this).Alarm();
             }
         });
 
-        new PushAlarm(SettingActivity.this).Alarm();
+
     }
 
     public class PushAlarm {
         private Context context;
-
         public PushAlarm(Context context) {
             this.context = context;
         }
@@ -125,11 +126,7 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
             Calendar calendar = Calendar.getInstance();
             calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), databaseOpenHelper.getHour(), databaseOpenHelper.getMinute(), 0);
 
-            if (databaseOpenHelper.getOnoff()==1)
-                am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, sender);
-            else
-                am.cancel(sender);
-
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, sender);
         }
     }
 
