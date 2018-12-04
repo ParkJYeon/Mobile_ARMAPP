@@ -1,5 +1,6 @@
 package com.example.macaron.mobile_project;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,6 +12,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.example.macaron.mobile_project.Activity.MainActivity;
+import com.example.macaron.mobile_project.Activity.SettingActivity;
+import com.example.macaron.mobile_project.Method.DatabaseOpenHelper;
 
 public class BroadcastActivity extends BroadcastReceiver {
 
@@ -20,6 +23,8 @@ public class BroadcastActivity extends BroadcastReceiver {
     public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION";
     public static final int NOTIFICATION_ID = 1;
 
+    DatabaseOpenHelper databaseOpenHelper;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
@@ -27,7 +32,10 @@ public class BroadcastActivity extends BroadcastReceiver {
         //추가 적으로 if문을 만든다.
         //스위치 onoff를 디비에 저장시키고(int state =1or0)스위치가 켜져있을때만 울리도록한다.
         //if문으로 디비에 저장된 설정 시간에만 울리도록 한다.
-        makeStatusNotification("연습용 문장",context);
+        databaseOpenHelper = new DatabaseOpenHelper(context);
+        if(databaseOpenHelper.getOnoff()==1) {
+            makeStatusNotification(databaseOpenHelper.getOnoff()+"연습용 문장", context);
+        }
     }
 
     public  void makeStatusNotification(String message, Context context) {

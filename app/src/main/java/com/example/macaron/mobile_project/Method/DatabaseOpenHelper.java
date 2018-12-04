@@ -18,7 +18,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS TIME_TABEL");
-        db.execSQL("CREATE TABLE TIME_TABLE (_id integer PRIMARY KEY autoincrement, hour integer, minute integer)");
+        db.execSQL("CREATE TABLE TIME_TABLE (_id integer PRIMARY KEY autoincrement, hour integer, minute integer, onoff integer)");
+        db.execSQL("INSERT INTO TIME_TABLE VALUES(null,'" + 9 + "','" + 0 + "', '" + 1 + "');");
     }
 
     @Override
@@ -26,28 +27,26 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void update(int hour, int minute) {
+    public void timeUpdate(int hour, int minute) {
         SQLiteDatabase db = getWritableDatabase();
-        // 입력한 항목과 일치하는 행의 가격 정보 수정
 
-        Cursor cursor = db.rawQuery("SELECT * FROM TIME_TABLE", null);
-        cursor.moveToFirst();
+        db.execSQL("UPDATE TIME_TABLE SET hour=" + hour + ", minute="+minute+" WHERE _id=" + 1 + ";");
 
-        if(cursor.getCount()>0){
-            db.execSQL("UPDATE TIME_TABLE SET hour="+hour+", minute="+minute+" WHERE _id = '1';");
-            //오류! no such column
-        }else{
-            db.execSQL("INSERT INTO TIME_TABLE VALUES(null,'" + hour + "','"+minute+"');");
-        }
+        db.close();
+    }
+
+    public void ofUpdate(int onoff) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.execSQL("UPDATE TIME_TABLE SET onoff="+onoff+" WHERE _id=" + 1 + ";");
+
         db.close();
     }
 
     public int getHour() {
-        // 읽기가 가능하게 DB 열기
         SQLiteDatabase db = getReadableDatabase();
         int hour;
 
-        // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
         Cursor cursor = db.rawQuery("SELECT * FROM TIME_TABLE ", null);
         cursor.moveToFirst();
         hour = cursor.getInt(1);
@@ -55,15 +54,23 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     public int getMinute() {
-        // 읽기가 가능하게 DB 열기
         SQLiteDatabase db = getReadableDatabase();
         int minute;
 
-        // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
         Cursor cursor = db.rawQuery("SELECT * FROM TIME_TABLE ", null);
         cursor.moveToFirst();
         minute = cursor.getInt(2);
         return minute;
+    }
+
+    public int getOnoff() {
+        SQLiteDatabase db = getReadableDatabase();
+        int onoff;
+
+        Cursor cursor = db.rawQuery("SELECT * FROM TIME_TABLE ", null);
+        cursor.moveToFirst();
+        onoff = cursor.getInt(3);
+        return onoff;
     }
 
 
