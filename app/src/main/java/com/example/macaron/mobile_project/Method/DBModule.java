@@ -70,38 +70,93 @@ public class DBModule {
         return null;
     }
 
-    public ArrayList<Bookmark> executeRawQuery_Bookmarklist(){
-        Log.e("Tag", "executeRawQuery_Bookmark() start");
-        try{
+    public String[] executeRawQuery_BookmarkClass(){
+        Log.e("Tag", "executeRawQuery_Bookmark() - Reading Clas");
 
-            Cursor cursor = dbBookmark.rawQuery("SELECT class, thema, title FROM BookmarkDB;", null);
+        try{
+            Cursor cursor = dbBookmark.rawQuery("SELECT class FROM BookmarkDB", null);
 
             int count = cursor.getCount();
-            String[] title = new String[count];
 
             if(count == 0){
                 cursor.close();
                 Log.e("Tag", "No data in BookmarkDB");
             }else{
-                ArrayList<Bookmark> bookmarks = new ArrayList<>();
-                Bookmark bookmark = new Bookmark();
+                String[] classi = new String[count];
                 for(int i = 0 ; i < count ; i++){
                     cursor.moveToNext();
-                    bookmark.setClassi(cursor.getString(0));
-                    bookmark.setThema(cursor.getString(1));
-                    bookmark.setTitle(cursor.getString(2));
-                    bookmarks.add(bookmark);
+                    classi[i] = cursor.getString(0);
                 }
+
                 cursor.close();
-                Log.e("Tag", "executeRawQuery_Bookmark() end");
-                return bookmarks;
+
+                return classi;
             }
         }catch (Exception e){
-            Log.e("Tag", "Error Select to Bookmark");
+            Log.e("Tag", "Error in Select BookmarkDB");
         }
 
         return null;
     }
+
+    public String[] executeRawQuery_BookmarkThema(){
+        Log.e("Tag", "executeRawQuery_Bookmark() - Reading Thema");
+
+        try{
+            Cursor cursor = dbBookmark.rawQuery("SELECT thema FROM BookmarkDB", null);
+
+            int count = cursor.getCount();
+
+            if(count == 0){
+                cursor.close();
+                Log.e("Tag", "No data in BookmarkDB");
+            }else{
+                String[] thema = new String[count];
+                for(int i = 0 ; i < count ; i++){
+                    cursor.moveToNext();
+                    thema[i] = cursor.getString(0);
+                }
+
+                cursor.close();
+
+                return thema;
+            }
+        }catch (Exception e){
+            Log.e("Tag", "Error in Select BookmarkDB");
+        }
+
+        return null;
+    }
+
+    public String[] executeRawQuery_BookmarkTitle(){
+        Log.e("Tag", "executeRawQuery_Bookmark() - Reading Title");
+
+        try{
+            Cursor cursor = dbBookmark.rawQuery("SELECT title FROM BookmarkDB", null);
+
+            int count = cursor.getCount();
+
+            if(count == 0){
+                cursor.close();
+                Log.e("Tag", "No data in BookmarkDB");
+            }else{
+                String[] title = new String[count];
+                for(int i = 0 ; i < count ; i++){
+                    cursor.moveToNext();
+                    title[i] = cursor.getString(0);
+                }
+
+                cursor.close();
+
+                return title;
+            }
+        }catch (Exception e){
+            Log.e("Tag", "Error in Select BookmarkDB");
+        }
+
+        return null;
+    }
+
 
     public boolean executeRawQuery_Bookmark(String classi, String thema, String title){
         Log.e("Tag", "executeRawQuery_Bookmark() start");

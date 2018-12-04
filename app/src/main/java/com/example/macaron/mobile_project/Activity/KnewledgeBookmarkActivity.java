@@ -43,5 +43,6 @@ public class KnewledgeBookmarkActivity extends FragmentActivity {
         dbModule.delete_Bookmark(classi, thema, title);
 
         Toast.makeText(this, "즐겨찾기 삭제 완료", Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

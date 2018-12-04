@@ -4,13 +4,17 @@ package com.example.macaron.mobile_project.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.macaron.mobile_project.Class.Bookmark;
 import com.example.macaron.mobile_project.Method.DBModule;
 import com.example.macaron.mobile_project.R;
+
+import java.util.ArrayList;
 
 public class KnewledgeActivity extends FragmentActivity {
 

@@ -61,23 +61,33 @@ public class BookMarkActivity extends FragmentActivity implements NavigationView
             final ListViewAdapter adapter = new ListViewAdapter();
             final ArrayList<Knewledge> knewledges = new ArrayList<>();
 
+            String[] classi = dbModule.executeRawQuery_BookmarkClass();
+            String[] thema = dbModule.executeRawQuery_BookmarkThema();
+            String[] title = dbModule.executeRawQuery_BookmarkTitle();
 
-            final ArrayList<Bookmark> bookmarks = dbModule.executeRawQuery_Bookmarklist();
+            final ArrayList<Bookmark> bookmarks = new ArrayList<>();
+
+            for(int i = 0 ; i < title.length ; i++){
+                Bookmark bookmark = new Bookmark(classi[i], thema[i], title[i]);
+                bookmarks.add(bookmark);
+            }
+
             listView.setAdapter(adapter);
 
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference reference;
 
             for(int i = 0 ; i < bookmarks.size() ; i++){
-                final String title = bookmarks.get(i).getTitle();
+                final String title_check = bookmarks.get(i).getTitle();
                 reference = database.getReference().child(bookmarks.get(i).getClassi()).child(bookmarks.get(i).getThema());
                 reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                             Knewledge knewledge = snapshot.getValue(Knewledge.class);
-                            if(knewledge.gettitle().equals(title)) {
+                            if(knewledge.gettitle().equals(title_check)) {
                                 knewledges.add(knewledge);
+                                Log.e("Tag", knewledge.gettitle());
                                 adapter.addItem(knewledge.gettitle(), true);
                             }
                         }

@@ -5,6 +5,12 @@ public class Bookmark {
     private String thema;
     private String title;
 
+    public Bookmark(String classi, String thema, String title){
+        this.classi = classi;
+        this.thema = thema;
+        this.title = title;
+    }
+
     public String getClassi() {
         return classi;
     }
