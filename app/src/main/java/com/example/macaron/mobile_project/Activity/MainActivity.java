@@ -59,20 +59,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     protected void onResume() {
         super.onResume();
         TextView textView = (TextView)findViewById(R.id.today);
-
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-        //오늘의 지식
-        Intent intent2 = new Intent(MainActivity.this, TodayKnowledgeReceiver.class);
-        PendingIntent sender2 = PendingIntent.getBroadcast(MainActivity.this,0,intent2,0);
-
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(calendar2.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DATE), 0, 0, 0);
-
-        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), 24 * 60 * 60 * 1000, sender2);
         textView.setText(databaseOpenHelper.getKnow());
 
         //푸쉬알람
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
         Intent intent = new Intent(MainActivity.this, BroadcastActivity.class);
         PendingIntent sender = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 

@@ -25,37 +25,41 @@ public class TodayKnowledgeReceiver extends BroadcastReceiver {
 
         int i=databaseOpenHelper.getWeek();
         String j=Integer.toString(databaseOpenHelper.getLook());
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("알림").child("철학").child(j);
-        if(i==1) {
-            reference = database.getReference().child("알림").child("철학").child(j);
-            i++;
-        }
-        else if(i==2){
-            reference = database.getReference().child("알림").child("역사").child(j);
-            i++;
-        }
-        else if(i==3) {
-            reference = database.getReference().child("알림").child("인문학  ").child(j);
-            i++;
-        }
-        else if(i==4){
-            reference = database.getReference().child("알림").child("음악").child(j);
-            i++;
-        }
-        else if(i==5){
-            reference = database.getReference().child("알림").child("사회").child(j);
-            i++;
-        }
-        else if(i==6){
-            reference = database.getReference().child("알림").child("넌센스").child(j);
-            i++;
-        }
-        else if(i==7) {
-            reference = database.getReference().child("알림").child("일요일").child(j);
-            i=1;
-        }
 
+        switch (i)
+        {
+            case 1:
+                reference = database.getReference().child("알림").child("철학").child(j);
+                i++;
+                break;
+            case 2:
+                reference = database.getReference().child("알림").child("역사").child(j);
+                i++;
+                break;
+            case 3:
+                reference = database.getReference().child("알림").child("인문학  ").child(j);
+                i++;
+                break;
+            case 4:
+                reference = database.getReference().child("알림").child("음악").child(j);
+                i++;
+                break;
+            case 5:
+                reference = database.getReference().child("알림").child("사회").child(j);
+                i++;
+                break;
+            case 6:
+                reference = database.getReference().child("알림").child("넌센스").child(j);
+                i++;
+                break;
+            case 7:
+                reference = database.getReference().child("알림").child("일요일").child(j);
+                i=1;
+                break;
+        }
 
         databaseOpenHelper.weUpdate(i);
         databaseOpenHelper.loUpdate(databaseOpenHelper.getLook()+1);

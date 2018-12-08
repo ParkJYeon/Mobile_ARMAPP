@@ -43,9 +43,12 @@ public class BroadcastActivity extends BroadcastReceiver {
         int hour = databaseOpenHelper.getHour();
         int minute = databaseOpenHelper.getMinute();
 
-        if (databaseOpenHelper.getOnoff() == 1)
-                    makeStatusNotification(databaseOpenHelper.getKnow(), context);
-
+        if (databaseOpenHelper.getOnoff() == 1) {
+            //if (hour == h) {
+                if (m-2<=minute)
+                makeStatusNotification(databaseOpenHelper.getKnow(), context);
+            //}
+        }
     }
 
 
