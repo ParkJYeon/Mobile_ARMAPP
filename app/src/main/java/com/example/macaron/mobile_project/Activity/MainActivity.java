@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.macaron.mobile_project.BroadcastActivity;
 import com.example.macaron.mobile_project.Method.ChangeModule;
@@ -57,6 +58,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     @Override
     protected void onResume() {
         super.onResume();
+        TextView textView = (TextView)findViewById(R.id.today);
 
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -68,6 +70,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         calendar2.set(calendar2.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DATE), 0, 0, 0);
 
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), 24 * 60 * 60 * 1000, sender2);
+        textView.setText(databaseOpenHelper.getKnow());
 
         //푸쉬알람
         Intent intent = new Intent(MainActivity.this, BroadcastActivity.class);
