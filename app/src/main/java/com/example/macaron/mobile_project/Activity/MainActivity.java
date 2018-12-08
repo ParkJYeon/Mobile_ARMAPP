@@ -1,6 +1,10 @@
 package com.example.macaron.mobile_project.Activity;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,13 +17,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.macaron.mobile_project.BroadcastActivity;
 import com.example.macaron.mobile_project.Method.ChangeModule;
 import com.example.macaron.mobile_project.Method.DBModule;
+import com.example.macaron.mobile_project.Method.DatabaseOpenHelper;
 import com.example.macaron.mobile_project.R;
+import com.example.macaron.mobile_project.TodayKnowledgeReceiver;
+
+import java.util.Calendar;
 
 
 public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+    final DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(MainActivity.this);
     boolean is_Bookmark = false;
     SharedPreferences prefs;
 
@@ -33,7 +43,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         Log.e("Tag", "Pref = " + prefs.getBoolean("isFirst", true));
         checkFirstRun();
 
-        ImageView bookmark = (ImageView)findViewById(R.id.bookmark_home);
+        final ImageView bookmark = (ImageView)findViewById(R.id.bookmark_home);
         if(is_Bookmark){
             bookmark.setImageResource(R.drawable.ic_favorite);
         }else{
@@ -42,6 +52,32 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        //오늘의 지식
+        Intent intent2 = new Intent(MainActivity.this, TodayKnowledgeReceiver.class);
+        PendingIntent sender2 = PendingIntent.getBroadcast(MainActivity.this,0,intent2,0);
+
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(calendar2.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DATE), 0, 0, 0);
+
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), 24 * 60 * 60 * 1000, sender2);
+
+        //푸쉬알람
+        Intent intent = new Intent(MainActivity.this, BroadcastActivity.class);
+        PendingIntent sender = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), databaseOpenHelper.getHour(), databaseOpenHelper.getMinute(), 0);
+
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, sender);
+
     }
 
     public void click_Favorite(View view){

@@ -5,7 +5,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -104,30 +103,10 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
 
                 Toast.makeText(SettingActivity.this, databaseOpenHelper.getHour() + "시 " + databaseOpenHelper.getMinute() + "분", Toast.LENGTH_SHORT).show();
 
-                new PushAlarm(SettingActivity.this).Alarm();
             }
         });
 
 
-    }
-
-    public class PushAlarm {
-        private Context context;
-        public PushAlarm(Context context) {
-            this.context = context;
-        }
-
-        public void Alarm() {
-            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(context, BroadcastActivity.class);
-
-            PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), databaseOpenHelper.getHour(), databaseOpenHelper.getMinute(), 0);
-
-            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, sender);
-        }
     }
 
     @Override
