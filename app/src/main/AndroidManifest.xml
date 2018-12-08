@@ -27,6 +27,7 @@
         <activity android:name=".Activity.InformActivity" />
         <activity android:name=".Activity.KnewledgeActivity" />
         <activity android:name=".Activity.KnewledgeBookmarkActivity" />
+        <activity android:name=".Activity.PopUpActivity" android:theme="@style/Theme.AppCompat.Dialog"/>
 
         <receiver
             android:name=".BroadcastActivity"
