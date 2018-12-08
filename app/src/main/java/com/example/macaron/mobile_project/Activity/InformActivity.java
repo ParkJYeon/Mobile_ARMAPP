@@ -1,6 +1,7 @@
 package com.example.macaron.mobile_project.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.example.macaron.mobile_project.Method.ChangeModule;
 import com.example.macaron.mobile_project.R;
@@ -24,6 +26,15 @@ public class InformActivity extends FragmentActivity implements NavigationView.O
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Button btnLisnece = (Button)findViewById(R.id.license);
+        btnLisnece.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(InformActivity.this, PopUpActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -74,5 +85,6 @@ public class InformActivity extends FragmentActivity implements NavigationView.O
             super.onBackPressed();
         }
     }
+
 
 }
