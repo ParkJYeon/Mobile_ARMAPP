@@ -1,6 +1,5 @@
 package com.example.macaron.mobile_project;
 
-import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,8 +11,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.example.macaron.mobile_project.Activity.MainActivity;
-import com.example.macaron.mobile_project.Activity.SettingActivity;
+import com.example.macaron.mobile_project.Class.Knewledge;
 import com.example.macaron.mobile_project.Method.DatabaseOpenHelper;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class BroadcastActivity extends BroadcastReceiver {
 
@@ -24,19 +25,29 @@ public class BroadcastActivity extends BroadcastReceiver {
     public static final int NOTIFICATION_ID = 1;
 
     DatabaseOpenHelper databaseOpenHelper;
+    final ArrayList<Knewledge> knewledges = new ArrayList<>();
+    int i = 1;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         //추가 적으로 if문을 만든다.
         //스위치 onoff를 디비에 저장시키고(int state =1or0)스위치가 켜져있을때만 울리도록한다.
         //if문으로 디비에 저장된 설정 시간에만 울리도록 한다.
+
         databaseOpenHelper = new DatabaseOpenHelper(context);
-        if(databaseOpenHelper.getOnoff()==1) {
-            makeStatusNotification(databaseOpenHelper.getOnoff()+"연습용 문장", context);
-        }
+        Calendar calendar = Calendar.getInstance();
+        int h = calendar.get(Calendar.HOUR);
+        int m = calendar.get(Calendar.MINUTE);
+        int hour = databaseOpenHelper.getHour();
+        int minute = databaseOpenHelper.getMinute();
+
+        if (databaseOpenHelper.getOnoff() == 1)
+                    makeStatusNotification(databaseOpenHelper.getKnow(), context);
+
     }
+
 
     public  void makeStatusNotification(String message, Context context) {
 

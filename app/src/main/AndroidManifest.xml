@@ -16,21 +16,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.MainActivity"></activity>
-        <activity android:name=".Activity.PhilosophyActivity"></activity>
-        <activity android:name=".Activity.HumanitiesActivity"></activity>
-        <activity android:name=".Activity.HistoryActivity"></activity>
-        <activity android:name=".Activity.MusicActivity"></activity>
-        <activity android:name=".Activity.EconomyActivity"></activity>
-        <activity android:name=".Activity.BookMarkActivity"></activity>
-        <activity android:name=".Activity.SettingActivity"></activity>
-        <activity android:name=".Activity.InformActivity" ></activity>
-        <activity android:name=".Activity.KnewledgeActivity"></activity>
-        <activity android:name=".Activity.KnewledgeBookmarkActivity"></activity>
-        <activity android:name=".Activity.PopUpActivity" android:theme="@style/Theme.AppCompat.Dialog"></activity>
+        <activity android:name=".Activity.MainActivity" />
+        <activity android:name=".Activity.PhilosophyActivity" />
+        <activity android:name=".Activity.HumanitiesActivity" />
+        <activity android:name=".Activity.HistoryActivity" />
+        <activity android:name=".Activity.MusicActivity" />
+        <activity android:name=".Activity.EconomyActivity" />
+        <activity android:name=".Activity.BookMarkActivity" />
+        <activity android:name=".Activity.SettingActivity" />
+        <activity android:name=".Activity.InformActivity" />
+        <activity android:name=".Activity.KnewledgeActivity" />
+        <activity android:name=".Activity.KnewledgeBookmarkActivity" />
 
         <receiver
             android:name=".BroadcastActivity"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".TodayKnowledgeReceiver"
             android:enabled="true"
             android:exported="true"></receiver>
     </application>
