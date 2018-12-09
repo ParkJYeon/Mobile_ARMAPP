@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.macaron.mobile_project.BroadcastActivity;
 import com.example.macaron.mobile_project.Method.ChangeModule;
@@ -34,6 +35,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     boolean is_Bookmark = false;
     SharedPreferences prefs;
 
+    String title_knew;
+    String thema_knew;
+    String table_knew;
+    long time = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +50,13 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         Log.e("Tag", "Pref = " + prefs.getBoolean("isFirst", true));
         checkFirstRun();
 
+        thema_knew = databaseOpenHelper.getThema();
+        table_knew = "알림";
+        title_knew = databaseOpenHelper.getTitle();
+
+        DBModule dbModule = new DBModule();
+        dbModule.openBookmarkDB(this);
+        is_Bookmark = dbModule.executeRawQuery_Bookmark(table_knew,thema_knew,title_knew);
         final ImageView bookmark = (ImageView)findViewById(R.id.bookmark_home);
         if(is_Bookmark){
             bookmark.setImageResource(R.drawable.ic_favorite);
@@ -60,6 +73,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         super.onResume();
         TextView textView = (TextView)findViewById(R.id.today);
         textView.setText(databaseOpenHelper.getKnow());
+
+        TextView txtTitle = (TextView)findViewById(R.id.todaytitle);
+        txtTitle.setText(databaseOpenHelper.getTitle());
 
         //푸쉬알람
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -78,12 +94,18 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         ImageView bookmark = (ImageView)findViewById(R.id.bookmark_home);
 
+        DBModule dbModule = new DBModule();
+        dbModule.openBookmarkDB(this);
         if(is_Bookmark){
             bookmark.setImageResource(R.drawable.ic_unfavorite);
+            dbModule.delete_Bookmark(table_knew, thema_knew, title_knew);
             is_Bookmark = false;
+            Toast.makeText(this, "즐겨찾기 삭제 완료", Toast.LENGTH_SHORT).show();
         }else{
             bookmark.setImageResource(R.drawable.ic_favorite);
+            dbModule.insert_Bookmark(table_knew, thema_knew,title_knew);
             is_Bookmark = true;
+            Toast.makeText(this, "즐겨찾기 추가 완료", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -132,10 +154,12 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         if(drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
         }else {
-            /*DBModule dbModule = new DBModule();
-            dbModule.closeBookmarkDB();
-            dbModule.closeReadDB();*/
-            super.onBackPressed();
+            if(System.currentTimeMillis() - time >= 1500){
+                time = System.currentTimeMillis();
+                Toast.makeText(this, "뒤로 버튼을 한 번 더 누르면 종료합니다.", Toast.LENGTH_SHORT).show();
+            }else if(System.currentTimeMillis() - time < 1500){
+                finish();
+            }
         }
     }
 

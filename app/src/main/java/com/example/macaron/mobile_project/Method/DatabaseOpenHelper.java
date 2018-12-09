@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
@@ -18,8 +19,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS TIME_TABEL");
-        db.execSQL("CREATE TABLE TIME_TABLE (_id integer PRIMARY KEY autoincrement, hour integer, minute integer, onoff integer, know text, week integer, look integer)");
-        db.execSQL("INSERT INTO TIME_TABLE VALUES(null," + 9 + "," + 0 + ", " + 2 + ",'"+"null"+"',"+1+","+1+");");
+        db.execSQL("CREATE TABLE TIME_TABLE (_id integer PRIMARY KEY autoincrement, hour integer, minute integer, onoff integer, know text, week integer, look integer, thema text, title text)");
+        db.execSQL("INSERT INTO TIME_TABLE VALUES(null," + 9 + "," + 0 + ", " + 1 + ",'"+"null"+"',"+7+","+1+",'null','null');");
     }
 
     @Override
@@ -67,6 +68,22 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void themaUpdate(String thema){
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.execSQL("UPDATE TIME_TABLE SET thema='"+thema+"' WHERE _id=1;");
+
+        db.close();
+    }
+
+    public void titleUpdate(String title){
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.execSQL("UPDATE TIME_TABLE SET title='"+title+"' WHERE _id=1;");
+
+        db.close();
+    }
+
 
     public int getHour() {
         SQLiteDatabase db = getReadableDatabase();
@@ -105,6 +122,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM TIME_TABLE ", null);
         cursor.moveToFirst();
         know = cursor.getString(4);
+
+        Log.e("Tag", know);
         return know;
     }
 
@@ -126,5 +145,30 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
         look = cursor.getInt(6);
         return look;
+    }
+
+    public String getThema(){
+        SQLiteDatabase db = getReadableDatabase();
+        String thema;
+
+        Cursor cursor = db.rawQuery("SELECT thema FROM TIME_TABLE", null);
+        cursor.moveToNext();
+        thema = cursor.getString(0);
+
+        return thema;
+    }
+
+    public String getTitle(){
+        SQLiteDatabase db = getReadableDatabase();
+        String title;
+
+        Cursor cursor = db.rawQuery("SELECT title FROM TIME_TABLE", null);
+        cursor.moveToNext();
+        title = cursor.getString(0);
+
+
+        Log.e("Tag", title);
+
+        return title;
     }
 }
