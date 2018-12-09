@@ -88,6 +88,10 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
             }
         });
 
+        TimePicker timePicker = (TimePicker)findViewById(R.id.timePicker);
+        timePicker.setHour(databaseOpenHelper.getHour());
+        timePicker.setMinute(databaseOpenHelper.getMinute());
+
         Button btnSetting = (Button)findViewById(R.id.btnsetting);
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
