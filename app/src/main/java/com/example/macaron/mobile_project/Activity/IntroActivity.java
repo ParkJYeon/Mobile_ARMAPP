@@ -45,7 +45,7 @@ public class IntroActivity extends FragmentActivity {
 
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), 24 * 60 * 60 * 1000, sender);
 
-        handler.postDelayed(r, 7000);
+        handler.postDelayed(r, 5000);
     }
 
     @Override

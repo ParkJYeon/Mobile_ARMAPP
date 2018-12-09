@@ -32,9 +32,6 @@ public class BroadcastActivity extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
-        //추가 적으로 if문을 만든다.
-        //스위치 onoff를 디비에 저장시키고(int state =1or0)스위치가 켜져있을때만 울리도록한다.
-        //if문으로 디비에 저장된 설정 시간에만 울리도록 한다.
 
         databaseOpenHelper = new DatabaseOpenHelper(context);
         Calendar calendar = Calendar.getInstance();
@@ -44,10 +41,9 @@ public class BroadcastActivity extends BroadcastReceiver {
         int minute = databaseOpenHelper.getMinute();
 
         if (databaseOpenHelper.getOnoff() == 1) {
-            //if (hour == h) {
-                if (m-2<=minute)
-                makeStatusNotification(databaseOpenHelper.getKnow(), context);
-            //}
+                if (m-2<=minute) {
+                    makeStatusNotification(databaseOpenHelper.getKnow(), context);
+                }
         }
     }
 
@@ -76,11 +72,12 @@ public class BroadcastActivity extends BroadcastReceiver {
 
         // 알림 만드는 부분
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.ic_icon)
                 .setContentTitle(NOTIFICATION_TITLE)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setVibrate(new long[3])
+                .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
         // 알림 보여주기

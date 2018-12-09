@@ -46,8 +46,6 @@ public class SettingActivity extends FragmentActivity implements NavigationView.
 
         Boolean isSetting;
 
-        //databaseOpenHelper.insert();
-
         if (databaseOpenHelper.getOnoff()==1)
         {
             isSetting = true;

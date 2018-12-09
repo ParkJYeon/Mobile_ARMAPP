@@ -53,10 +53,9 @@ public class TodayKnowledgeReceiver extends BroadcastReceiver {
                 break;
             case 6:
                 reference = database.getReference().child("알림").child("넌센스").child(j);
-                i++;
                 break;
             case 7:
-                reference = database.getReference().child("알림").child("일요일").child(j);
+                reference = database.getReference().child("알림").child("넌센스").child(j);
                 i=1;
                 break;
         }

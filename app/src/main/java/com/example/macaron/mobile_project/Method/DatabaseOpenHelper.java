@@ -19,7 +19,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS TIME_TABEL");
         db.execSQL("CREATE TABLE TIME_TABLE (_id integer PRIMARY KEY autoincrement, hour integer, minute integer, onoff integer, know text, week integer, look integer)");
-        db.execSQL("INSERT INTO TIME_TABLE VALUES(null," + 9 + "," + 0 + ", " + 1 + ",'"+"null"+"',"+6+","+1+");");
+        db.execSQL("INSERT INTO TIME_TABLE VALUES(null," + 9 + "," + 0 + ", " + 2 + ",'"+"null"+"',"+1+","+1+");");
     }
 
     @Override
