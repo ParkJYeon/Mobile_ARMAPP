@@ -25,8 +25,6 @@ public class BroadcastActivity extends BroadcastReceiver {
     public static final int NOTIFICATION_ID = 1;
 
     DatabaseOpenHelper databaseOpenHelper;
-    final ArrayList<Knewledge> knewledges = new ArrayList<>();
-    int i = 1;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -35,9 +33,7 @@ public class BroadcastActivity extends BroadcastReceiver {
 
         databaseOpenHelper = new DatabaseOpenHelper(context);
         Calendar calendar = Calendar.getInstance();
-        int h = calendar.get(Calendar.HOUR);
         int m = calendar.get(Calendar.MINUTE);
-        int hour = databaseOpenHelper.getHour();
         int minute = databaseOpenHelper.getMinute();
 
         if (databaseOpenHelper.getOnoff() == 1) {
