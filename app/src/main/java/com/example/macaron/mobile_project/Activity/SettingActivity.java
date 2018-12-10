@@ -1,10 +1,6 @@
 package com.example.macaron.mobile_project.Activity;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,12 +17,9 @@ import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.macaron.mobile_project.BroadcastActivity;
 import com.example.macaron.mobile_project.Method.ChangeModule;
 import com.example.macaron.mobile_project.Method.DatabaseOpenHelper;
 import com.example.macaron.mobile_project.R;
-
-import java.util.Calendar;
 
 public class SettingActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener {
 

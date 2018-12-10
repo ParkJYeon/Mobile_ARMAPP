@@ -35,11 +35,17 @@ public class BroadcastActivity extends BroadcastReceiver {
         Calendar calendar = Calendar.getInstance();
         int m = calendar.get(Calendar.MINUTE);
         int minute = databaseOpenHelper.getMinute();
+        int h = calendar.get(Calendar.HOUR);
+        int hour = databaseOpenHelper.getHour();
+
+        if(12<hour) hour=hour-12;
 
         if (databaseOpenHelper.getOnoff() == 1) {
-                if (m-2<=minute) {
+            if(h==hour) {
+                if (m == minute) {
                     makeStatusNotification(databaseOpenHelper.getKnow(), context);
                 }
+            }
         }
     }
 
